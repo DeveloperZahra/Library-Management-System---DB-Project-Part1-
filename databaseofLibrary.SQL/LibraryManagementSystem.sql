@@ -39,7 +39,7 @@ ON DELETE CASCADE
 
 
 ----------TO CREATE Member TABLE-----------------
-CREATE TABLE Member(
+CREATE TABLE Members(
 MemberID INT  PRIMARY KEY identity(1,1) NOT NULL,
 F_Name VARCHAR (200) NOT NULL,
 M_Name VARCHAR (200) NOT NULL,
@@ -94,14 +94,14 @@ PRIMARY KEY (LoanID, BookID, MemberID)
 );
 
 ----------------TO CREATE Staff TABLE--------------------
-CREATE TABLE  Staff (
+CREATE TABLE  TStaffs (
 
-StaffID INT  PRIMARY KEY identity(1,1) NOT NULL,
-Staff_F_Name  VARCHAR (200) NOT NULL,
-Staff_M_Name   VARCHAR (200)  NOT NULL,
-Staff_L_Name   VARCHAR (200) NOT NULL,
-Position  VARCHAR  NOT NULL,
-ContactNumber INT CONSTRAINT CK_Only8Digits_New CHECK(LEN(RTRIM(ContactNumber)) = 8),
+S_ID INT  PRIMARY KEY identity(1,1) NOT NULL,
+S_F_Name  VARCHAR (200) NOT NULL,
+S_M_Name   VARCHAR (200)  NOT NULL,
+S_L_Name   VARCHAR (200) NOT NULL,
+Position  VARCHAR (200) NOT NULL,
+ContactNumber INT CONSTRAINT CK_Only8Digits_TStaffs CHECK(LEN(RTRIM(ContactNumber)) = 8),
 LibraryID INT, FOREIGN KEY (LibraryID) REFERENCES Library(LibraryID)
 ON DELETE CASCADE 
     ON UPDATE CASCADE
@@ -160,9 +160,9 @@ select * from Library
 -------- insert values to library_ContactPhone table---------
 INSERT INTO Library_Contact_Number (LibraryID, ContactNumber) 
 VALUES
-(3, '12345678'),
-(4, '87654321'),
-(5, '21345867');
+(1, '12345678'),
+(2, '87654321'),
+(3, '21345867');
 
 ------------display all data in library_ContactPhone table-----------
 select * from Library_Contact_Number
@@ -170,20 +170,20 @@ select * from Library_Contact_Number
 
 --------------------- insert value to book table--------------
 INSERT INTO Book(ISBN, Title, Genre, Price, AvailabilityStatus, ShelfLocation, LibraryID) VALUES
-(9781001, 'Desert Tales', 'Fiction', 4.500, 1, 'A1', 3),
-(9781002, 'Oman History', 'Non-fiction', 6.750, 1, 'B2', 3),
-(9781003, 'Math Guide', 'Reference', 3.250, 1, 'C3', 4),
-(9781004, 'Science Fun', 'Children', 2.800, 1, 'D1', 4),
-(9781005, 'Falaj Story', 'Fiction', 5.000, 0, 'A3', 5),
-(9781006, 'World Atlas', 'Reference', 7.950, 1, 'C1', 5),
-(9781007, 'Think Big', 'Non-fiction', 4.400, 1, 'B1', 3),
-(9781008, 'Quran Kids', 'Children', 3.000, 1, 'D2', 4);
+(9781001, 'Desert Tales', 'Fiction', 4.500, 1, 'A1', 1),
+(9781002, 'Oman History', 'Non-fiction', 6.750, 1, 'B2', 1),
+(9781003, 'Math Guide', 'Reference', 3.250, 1, 'C3', 2),
+(9781004, 'Science Fun', 'Children', 2.800, 1, 'D1', 2),
+(9781005, 'Falaj Story', 'Fiction', 5.000, 0, 'A3', 3),
+(9781006, 'World Atlas', 'Reference', 7.950, 1, 'C1', 3),
+(9781007, 'Think Big', 'Non-fiction', 4.400, 1, 'B1', 2),
+(9781008, 'Quran Kids', 'Children', 3.000, 1, 'D2', 1);
 
 -----------display all data in Book table-----------
 select * from Book
 
 ------------ insert values to member table------------ 
-INSERT INTO Member (F_Name, M_Name, L_Name,Member_Phone, Member_email, Membership_Start_Date) VALUES
+INSERT INTO Members (F_Name, M_Name, L_Name,Member_Phone, Member_email, Membership_Start_Date) VALUES
 ('Ali', 'Saeed', 'AlHarthy', '81234567','ali.h@gmail.com', '2024-01-15'),
 ('Eman', 'Ahmed', 'AlRaisi',  '82345678', 'Eman.r@gmail.com','2024-03-20'),
 ('Khalid', 'Nasser', 'AlBusaidi',  '83456789', 'Khalid.b@gmail.com','2024-05-10'),
@@ -193,7 +193,10 @@ INSERT INTO Member (F_Name, M_Name, L_Name,Member_Phone, Member_email, Membershi
 ('Nasser', 'Ali', 'AlHinai', '82176453', 'nasser.h@gmail.com', '2023-11-18');
 
 --------------------display all data in Mamber table---------------
-select * from Member
+select * from Members
+
+
+sp_help Members;
 
 
 
@@ -252,24 +255,27 @@ select * from BookLoans
 
 
 ------------insert values to Staff table---------------------------------
-INSERT INTO staff (Staff_F_Name, Staff_M_Name, Staff_L_Name, Position, ContactNumber, LibraryID) VALUES
-('Ali', 'Saeed', 'AlBalushi', 'Librarian', '99881234',3),
-('Zahra', 'Hamed', 'Alhabsi', 'Assistant', '99221100', 4),
-('Ahmed', 'Salim', 'AlShanfari', 'Manager', '92334455', 5);
+INSERT INTO TStaffs(S_F_Name, S_M_Name, S_L_Name, Position, ContactNumber, LibraryID) VALUES
+('Ali', 'Saeed', 'AlBalushi', 'Librarian', '99881234',1),
+('Zahra', 'Hamed', 'Alhabsi', 'Assistant', '99221100', 2),
+('Ahmed', 'Salim', 'AlShanfari', 'Manager', '92334455', 3);
 
+
+----------------------display all data in Staff table
+select * from TStaffs
 
 ---------- change size of F_name, M_name, L_name ---------
-ALTER TABLE Staff
-ALTER COLUMN Staff_F_Name VARCHAR(200);
+ALTER TABLE TStaffs
+ALTER COLUMN S_F_Name VARCHAR(200);
 
-ALTER TABLE Staff
-ALTER COLUMN Staff_M_Name VARCHAR(200);
+ALTER TABLE TStaffs
+ALTER COLUMN S_M_Name VARCHAR(200);
 
-ALTER TABLE Staff
-ALTER COLUMN Staff_L_Name VARCHAR(200);
+ALTER TABLE TStaffs
+ALTER COLUMN S_L_Name VARCHAR(200);
 
 ---------------display all data in Staff-----------------
-select * from Staff
+select * from TStaffs
 
 -------------insert values to Payment table--------------------
 INSERT INTO Payment (Payment_Date, Amount, Method)
@@ -325,6 +331,7 @@ select * from Payment
 
 ---------Update Staff-----------
 
-update Staff
-set Staff_F_Name='Ali', ContactNumber=92105563
+update TStaffs
+set S_F_Name='Ali', ContactNumber=92105563
 
+select * from TStaffs
